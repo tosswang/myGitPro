@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.test.maven</groupId>
+	<artifactId>test1</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>test1</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql_driver</groupId>
+			<artifactId>mysql_driver</artifactId>
+			<version>5.1.6</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<!-- profile中的内容要想生效，是需要激活的， -->
+		<profile>
+			<id>
+			runTest
+		</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>
+						maven-surefire-plugin
+					</artifactId>
+						<version>2.12.4</version>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>development</id>
+			<!--当满足下面这个activation所包含的属性时，profile被激活，具体就是指activation元素之后的properties元素被激活-->
+			<activation>
+				<property>
+					<name>environment.type</name>
+					<value>dev</value>
+				</property>
+			</activation>
+			<properties>
+				<jdbc.driverClassName>oracle.jdbc.driver.OracleDriver</jdbc.driverClassName>
+				<jdbc.url>jdbc:oracle:thin:@proddb01:1521:DEV</jdbc.url>
+				<jdbc.username>dev_user</jdbc.username>
+				<jdbc.password>s00p3rs3cr3t</jdbc.password>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<activation>
+				<property>
+					<name>environment.type</name>
+					<value>prod</value>
+				</property>
+			</activation>
+			<properties>
+				<jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+				<jdbc.url>jdbc:mysql://localhost:3306/production_db</jdbc.url>
+				<jdbc.username>prod_user</jdbc.username>
+				<jdbc.password>s3cr3tw0rd</jdbc.password>
+			</properties>
+		</profile>
+	</profiles>
+</project>
